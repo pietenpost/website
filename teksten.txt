@@ -20,7 +20,7 @@ ONTVANGERS: Familie Duin
 VERSTOPPLEK: In de schuur, achter de fietsen
 BERICHT_PIET: "Ik heb hard aangeklopt, maar niemand deed open! De zakken cadeaus waren flink zwaar, dus ik heb ze goed verstopt voor Familie Duin. Veel plezier met uitpakken!" — Pakjespiet (#05)
 AFLEVERFOTO: foto.jpeg
-AFLEVERFOTO_BIJSCHRIFT: Afleverfoto gemaakt door Pakjespiet (#05) · 19:06
+AFLEVERFOTO_BIJSCHRIFT: Afleverfoto gemaakt door Pakjespiet (#05) · 14:02
 
 
 # ------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ ZENDINGNUMMER: PIET-8294
 AFZENDER: Sinterklaas (Spanje)
 BEZORGER: Pakjespiet (#05) & Ozosnel
 ZENDING: Zakken cadeaus
-HANDTEKENING_SUBTITEL: Pakjespiet (#05) & Ozosnel · 19:06
+HANDTEKENING_SUBTITEL: Pakjespiet (#05) & Ozosnel · 14:02
 
 
 # ------------------------------------------------------------------------------
@@ -47,19 +47,19 @@ START_FOUTMELDING: Dit zendingnummer staat niet in het Grote Boek. Kijk goed op 
 OVERZICHT_TITEL: We hebben jullie gemist
 OVERZICHT_TEKST: Pakjespiet heeft aangeklopt, maar niemand deed open. Jullie zakken cadeaus liggen veilig verstopt.
 
-STAP_1_TIJD: 14:10
+STAP_1_TIJD: 09:15
 STAP_1_TITEL: Aangemeld door Sinterklaas
 STAP_1_TEKST: Gecontroleerd in het Grote Boek en klaargezet voor bezorging.
 
-STAP_2_TIJD: 18:45
+STAP_2_TIJD: 13:30
 STAP_2_TITEL: Onderweg over de daken
 STAP_2_TEKST: Pakjespiet is met Ozosnel naar jullie straat vertrokken.
 
-STAP_3_TIJD: 19:04
+STAP_3_TIJD: 14:00
 STAP_3_TITEL: Aangeklopt — niemand thuis
 STAP_3_TEKST: Hard op de deur geklopt, maar niemand deed open. Briefje achtergelaten.
 
-STAP_4_TIJD: 19:06
+STAP_4_TIJD: 14:02
 STAP_4_TITEL: Cadeaus veilig verstopt
 STAP_4_TEKST: De zakken cadeaus staan droog en veilig, achter een digitaal slot.
 
