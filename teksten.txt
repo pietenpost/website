@@ -82,8 +82,8 @@ OPDRACHT_3_TITEL: Zoek de 6 pepernoten-letters
 OPDRACHT_3_TEKST: In de kamer liggen 6 losse pepernoten-letters verstopt. Zoek ze alle 6 en leg ze op de goede volgorde. Welk woord krijg je?
 OPDRACHT_3_CODE: PAKJES
 
-OPDRACHT_4_TITEL: De geheime licht-envelop
-OPDRACHT_4_TEKST: Maak de envelop niet open! Schijn er met het lampje van een telefoon doorheen. Welke 4 cijfers zie je?
+OPDRACHT_4_TITEL: De gesloten envelop
+OPDRACHT_4_TEKST: Pak de dichte envelop van Pakjespiet — maar let op: jullie mogen de envelop NIET openmaken! Hoe komen jullie er toch achter welke 4 cijfers erin zitten? Typ de 4 cijfers hieronder in.
 OPDRACHT_4_CODE: 2026
 
 OPDRACHT_5_TITEL: Pepernoten tellen
@@ -91,8 +91,8 @@ OPDRACHT_5_TEKST: Zoek het zakje met pepernoten en tel ze heel precies (nog niet
 OPDRACHT_5_CODE: 27
 
 OPDRACHT_6_TITEL: De laatste puzzel: de papieren rebus
-OPDRACHT_6_TEKST: Pak het grote rebus-blad van Pakjespiet met de 5 plaatjes. Los alle 5 stukjes op met potlood. Welk lang Sinterklaaswoord komt eruit? Typ dat woord hieronder in.
-OPDRACHT_6_CODE: SINTERKLAASPIET
+OPDRACHT_6_TEKST: Pak het grote rebus-blad van Pakjespiet met de 9 plaatjes. Los alle 9 stukjes op met potlood. Welke geheime code komt eruit? Typ die code hieronder in.
+OPDRACHT_6_CODE: PAKJESBOOT26
 
 
 # ------------------------------------------------------------------------------
