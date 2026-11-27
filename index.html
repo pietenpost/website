@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#9E1B1B" />
+  <meta name="description" content="PietenPost — Officiële Track &amp; Trace voor Familie Duin." />
   <title>PietenPost — Officiële Track &amp; Trace</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Crect width='36' height='36' rx='6' fill='%239E1B1B'/%3E%3Cpath d='M18 5L26 12L23.5 18H12.5L10 12L18 5Z' fill='none' stroke='%23EAD196' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M18 8.5V15.5M14.5 12H21.5' stroke='%23EAD196' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M9 21L18 18L27 21V29L18 32L9 29V21Z' fill='none' stroke='%23EAD196' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Confetti bibliotheek voor de ontgrendeling -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Confetti bibliotheek (defer: blokkeert eerste weergave niet) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
   <!-- Google Fonts: Fraunces (klassieke serif), DM Sans (helder Nederlands drukwerk) & IBM Plex Mono (verzendlabel) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -94,12 +96,16 @@
       box-shadow: 0 2px 0 #5C0E0E;
       transition: background-color 0.14s ease, transform 0.08s ease, box-shadow 0.08s ease;
     }
-    .btn-sint:hover {
+    .btn-sint:hover:not(:disabled) {
       background-color: var(--sint-crimson-dark);
     }
-    .btn-sint:active {
+    .btn-sint:active:not(:disabled) {
       transform: translateY(2px);
       box-shadow: 0 0 0 #5C0E0E;
+    }
+    .btn-sint:disabled {
+      opacity: 0.72;
+      cursor: wait;
     }
 
     /* Secundaire papieren knop */
@@ -168,7 +174,7 @@
       box-shadow: inset 0 0 0 1px currentColor;
     }
 
-    /* Subtiele animaties (snel en functioneel, zonder AI-gloed of pulse) */
+    /* Subtiele animaties (snel en functioneel) */
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       20% { transform: translateX(-5px); }
@@ -214,12 +220,10 @@
       animation: loadBar 0.85s cubic-bezier(0.25, 0.8, 0.35, 1) forwards;
     }
 
-    @keyframes modalSlideUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .anim-sheet {
-      animation: modalSlideUp 0.2s ease-out forwards;
+    @media (prefers-reduced-motion: reduce) {
+      .animate-shake, .anim-view, .anim-stamp, .anim-pop, .anim-load-bar {
+        animation: none !important;
+      }
     }
   </style>
 </head>
@@ -785,13 +789,27 @@
             Afleverfoto
           </div>
           <div class="p-2.5 bg-[#FFFDF9] border-[1.5px] border-[#D6CBB8] rounded-[4px] shadow-[0_1px_0_#DDD3C2]">
-            <div class="rounded-[2px] overflow-hidden bg-[#F7F2E8] border border-[#E3DACB] flex items-center justify-center">
+            <div class="rounded-[2px] overflow-hidden bg-[#F7F2E8] border border-[#E3DACB] flex items-center justify-center relative group">
               <img
                 id="deliveryPhotoImg"
                 src="foto.jpeg"
-                class="w-full max-h-[420px] object-contain block"
+                loading="eager"
+                class="w-full max-h-[420px] object-contain block cursor-zoom-in"
                 alt="Afleverfoto van Pakjespiet"
+                title="Tik om te vergroten"
               />
+              <button
+                id="zoomPhotoBtn"
+                type="button"
+                class="absolute bottom-2 right-2 bg-[#1D1916]/75 hover:bg-[#1D1916] text-[#FFFDF9] text-[11px] font-mono-label px-2.5 py-1 rounded-[3px] cursor-pointer transition flex items-center gap-1"
+                aria-label="Afleverfoto vergroten"
+              >
+                <svg class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="9" cy="9" r="5.5"/>
+                  <path stroke-linecap="round" d="M13.5 13.5L17 17M9 6.5v5M6.5 9h5"/>
+                </svg>
+                <span>Vergroot</span>
+              </button>
               <div id="noPhotoPlaceholder" class="hidden text-xs text-[#5E554B] space-y-1.5 max-w-xs text-center p-8">
                 <svg class="w-8 h-8 mx-auto text-[#B5A996]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                   <rect x="3" y="5" width="18" height="14" rx="2"/>
@@ -836,6 +854,30 @@
 
   </main>
 
+  <!-- Volledig scherm Afleverfoto (Lightbox) -->
+  <div
+    id="photoLightbox"
+    class="hidden fixed inset-0 z-50 bg-[#1D1916]/92 flex flex-col items-center justify-center p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Afleverfoto vergroot"
+  >
+    <button
+      id="closeLightboxBtn"
+      type="button"
+      class="absolute top-4 right-4 min-h-[42px] px-3.5 py-2 rounded-[5px] bg-[#FFFDF9] text-[#1D1916] font-mono-label text-xs font-bold cursor-pointer border border-[#D6CBB8]"
+      aria-label="Sluiten"
+    >
+      Sluiten &times;
+    </button>
+    <img
+      id="lightboxImg"
+      class="max-w-full max-h-[84vh] object-contain rounded-[4px] border-2 border-[#FFFDF9]/80 shadow-lg"
+      alt="Afleverfoto vergroot"
+    />
+    <div id="lightboxCaption" class="font-mono-label text-xs text-[#F2ECE1]/90 mt-3 text-center"></div>
+  </div>
+
   <!-- Officiële Voettekst -->
   <footer class="bg-[#EAE2D3]/75 border-t border-[#D6CBB8]">
     <div class="max-w-lg mx-auto px-4 py-3.5 flex items-center justify-between gap-2 text-[11px] font-mono-label text-[#5E554B]">
@@ -847,6 +889,9 @@
   <script>
     (function () {
       'use strict';
+
+      const STATE_COOKIE_NAME = 'pietenpost_progress_v1';
+      const STATE_MAX_AGE_SECONDS = 60 * 60 * 24 * 14; // 14 dagen
 
       // Standaardteksten (worden automatisch overschreven door teksten.txt)
       const DEFAULT_TEXTS = {
@@ -931,10 +976,14 @@
       let challenges = buildChallenges(texts);
       let validTrackingClean = cleanCode(texts.ZENDINGNUMMER);
 
-      // Applicatiestatus
+      // Applicatiestatus (wordt continu bewaard in cookie + localStorage)
+      let currentView = 'lookup';
       let currentStep = 0;
       let unlocked = false;
       let isAdvancing = false;
+      let draftCode = '';
+      let restartConfirmPending = false;
+      let restartConfirmTimer = null;
 
       // DOM-referenties: schermen
       const lookupView = document.getElementById('lookupView');
@@ -979,18 +1028,24 @@
       const challengeDesc = document.getElementById('challengeDesc');
       const codeForm = document.getElementById('codeForm');
       const codeInput = document.getElementById('codeInput');
+      const codeSubmitBtn = codeForm.querySelector('button[type="submit"]');
       const codeFeedback = document.getElementById('codeFeedback');
 
-      // DOM-referenties: afleverbewijs
+      // DOM-referenties: afleverbewijs & lightbox
       const revealTitleDisplay = document.getElementById('revealTitleDisplay');
       const revealSubtitleDisplay = document.getElementById('revealSubtitleDisplay');
       const locationDisplay = document.getElementById('locationDisplay');
       const noteDisplay = document.getElementById('noteDisplay');
       const deliveryPhotoImg = document.getElementById('deliveryPhotoImg');
+      const zoomPhotoBtn = document.getElementById('zoomPhotoBtn');
       const noPhotoPlaceholder = document.getElementById('noPhotoPlaceholder');
       const photoCaptionDisplay = document.getElementById('photoCaptionDisplay');
       const signatureSubtitleDisplay = document.getElementById('signatureSubtitleDisplay');
       const restartBtn = document.getElementById('restartBtn');
+      const photoLightbox = document.getElementById('photoLightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const lightboxCaption = document.getElementById('lightboxCaption');
+      const closeLightboxBtn = document.getElementById('closeLightboxBtn');
 
       function cleanCode(value) {
         return String(value || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -1002,6 +1057,112 @@
 
       function isNumericAnswer(answer) {
         return /^\d+$/.test(answer);
+      }
+
+      // ------------------------------------------------------------------
+      // VOORTGANG OPSLAAN (DUBBELE BEVEILIGING: COOKIE + LOCALSTORAGE)
+      // ------------------------------------------------------------------
+      function readCookie(name) {
+        try {
+          const pairs = document.cookie ? document.cookie.split('; ') : [];
+          for (let i = 0; i < pairs.length; i++) {
+            const idx = pairs[i].indexOf('=');
+            if (idx === -1) continue;
+            const k = pairs[i].slice(0, idx);
+            if (k === name) {
+              return decodeURIComponent(pairs[i].slice(idx + 1));
+            }
+          }
+        } catch (err) {
+          // Negeer leesfouten
+        }
+        return null;
+      }
+
+      function writeCookie(name, value, maxAgeSeconds) {
+        try {
+          let cookie = name + '=' + encodeURIComponent(value) + '; max-age=' + maxAgeSeconds + '; path=/; SameSite=Lax';
+          if (window.location && window.location.protocol === 'https:') {
+            cookie += '; Secure';
+          }
+          document.cookie = cookie;
+        } catch (err) {
+          // Negeer schrijffouten (bijv. strikte file:// modus)
+        }
+      }
+
+      function deleteCookie(name) {
+        try {
+          document.cookie = name + '=; max-age=0; path=/; SameSite=Lax';
+        } catch (err) {
+          // Negeer
+        }
+      }
+
+      function saveProgress(override) {
+        const payload = Object.assign({
+          code: validTrackingClean,
+          view: currentView === 'loading' ? (unlocked ? 'reveal' : 'overview') : currentView,
+          step: currentStep,
+          unlocked: unlocked,
+          draft: draftCode
+        }, override || {});
+
+        const serialized = JSON.stringify(payload);
+        writeCookie(STATE_COOKIE_NAME, serialized, STATE_MAX_AGE_SECONDS);
+        try {
+          localStorage.setItem(STATE_COOKIE_NAME, serialized);
+        } catch (err) {
+          // Negeer privacy-modus fouten
+        }
+      }
+
+      function loadSavedProgress() {
+        let raw = readCookie(STATE_COOKIE_NAME);
+        if (!raw) {
+          try {
+            raw = localStorage.getItem(STATE_COOKIE_NAME);
+          } catch (err) {
+            raw = null;
+          }
+        }
+        if (!raw) return null;
+
+        try {
+          const data = JSON.parse(raw);
+          if (!data || typeof data !== 'object') return null;
+          // Alleen herstellen als het om hetzelfde zendingnummer gaat
+          if (data.code && cleanCode(data.code) !== validTrackingClean) {
+            return null;
+          }
+          return data;
+        } catch (err) {
+          return null;
+        }
+      }
+
+      function clearSavedProgress() {
+        deleteCookie(STATE_COOKIE_NAME);
+        try {
+          localStorage.removeItem(STATE_COOKIE_NAME);
+        } catch (err) {
+          // Negeer
+        }
+      }
+
+      /**
+       * Synchroniseert de statusbadge op het overzichtsscherm met de voortgang.
+       */
+      function syncStatusHeader() {
+        if (unlocked) {
+          topStatusBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[3px] bg-[#EAF4EE] border border-[#1A6B3C] text-[#14532E] text-xs font-bold';
+          topStatusBadge.innerHTML = '<svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3.2 8.4l3.1 3.1 6.5-6.8"/></svg><span>Locatie ontgrendeld</span>';
+          overviewStepCounter.textContent = '5 van 5 klaar';
+        } else {
+          topStatusBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[3px] bg-[#FDF5E2] border border-[#B57E1A] text-[#7D5309] text-xs font-bold';
+          topStatusBadge.innerHTML = '<svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path stroke-linecap="round" d="M8 5v3.5M8 11h.01"/></svg><span>Actie nodig: Verificatie</span>';
+          overviewStepCounter.textContent = '4 van 5 klaar';
+        }
       }
 
       /**
@@ -1055,6 +1216,7 @@
        * Past alle geladen teksten, codes en de afleverfoto toe op de pagina.
        */
       function applyTexts() {
+        const prevTrackingClean = validTrackingClean;
         validTrackingClean = cleanCode(texts.ZENDINGNUMMER);
         challenges = buildChallenges(texts);
 
@@ -1095,18 +1257,25 @@
 
         // Afleverfoto uit de repository laden (standaard foto.jpeg)
         const photoFile = texts.AFLEVERFOTO || 'foto.jpeg';
-        deliveryPhotoImg.classList.remove('hidden');
-        noPhotoPlaceholder.classList.add('hidden');
-        deliveryPhotoImg.src = photoFile;
+        if (deliveryPhotoImg.getAttribute('src') !== photoFile) {
+          deliveryPhotoImg.classList.remove('hidden');
+          zoomPhotoBtn.classList.remove('hidden');
+          noPhotoPlaceholder.classList.add('hidden');
+          deliveryPhotoImg.src = photoFile;
+        }
 
-        if (!verifyView.classList.contains('hidden')) {
-          renderChallenge();
+        // Als ZENDINGNUMMER veranderd is in teksten.txt, check of opgeslagen voortgang nog bij deze code hoort
+        if (prevTrackingClean !== validTrackingClean) {
+          restoreState();
+        } else if (!verifyView.classList.contains('hidden')) {
+          renderChallenge(true);
         }
       }
 
       // Foutafhandeling als de afleverfoto niet gevonden kan worden
       deliveryPhotoImg.addEventListener('error', function () {
         deliveryPhotoImg.classList.add('hidden');
+        zoomPhotoBtn.classList.add('hidden');
         noPhotoPlaceholder.classList.remove('hidden');
       });
 
@@ -1133,11 +1302,16 @@
       /**
        * Schakelt netjes tussen de verschillende schermen van de Track & Trace.
        */
-      function showView(name) {
+      function showView(name, options) {
+        const opts = options || {};
+        currentView = name;
+
         [lookupView, loadingView, overviewView, verifyView, revealView].forEach(function (view) {
           view.classList.add('hidden');
         });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (!opts.skipScroll) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         if (name === 'lookup') {
           changeCodeBtn.classList.add('hidden');
@@ -1150,19 +1324,25 @@
           loadingBarFill.classList.add('anim-load-bar');
           loadingView.classList.remove('hidden');
         } else if (name === 'overview') {
+          syncStatusHeader();
           changeCodeBtn.classList.remove('hidden');
-          verifyProgressTag.textContent = currentStep + ' van ' + challenges.length + ' codes';
-          startVerifyBtnLabel.textContent = currentStep > 0
-            ? 'Verder met opdracht ' + (currentStep + 1)
-            : 'Klik hier voor de verificatie';
+          verifyProgressTag.textContent = (unlocked ? challenges.length : currentStep) + ' van ' + challenges.length + ' codes';
+          startVerifyBtnLabel.textContent = unlocked
+            ? 'Bekijk de verstopplek'
+            : (currentStep > 0 ? 'Verder met opdracht ' + (currentStep + 1) : 'Klik hier voor de verificatie');
           overviewView.classList.remove('hidden');
         } else if (name === 'verify') {
           changeCodeBtn.classList.remove('hidden');
-          renderChallenge();
+          renderChallenge(Boolean(opts.preserveDraft));
           verifyView.classList.remove('hidden');
         } else if (name === 'reveal') {
+          syncStatusHeader();
           changeCodeBtn.classList.remove('hidden');
           revealView.classList.remove('hidden');
+        }
+
+        if (!opts.skipSave && name !== 'loading') {
+          saveProgress();
         }
       }
 
@@ -1196,9 +1376,11 @@
       /**
        * Vult het verificatiescherm met de huidige opdracht.
        */
-      function renderChallenge() {
+      function renderChallenge(preserveDraft) {
         const ch = challenges[currentStep];
         isAdvancing = false;
+        if (codeSubmitBtn) codeSubmitBtn.disabled = false;
+
         stepCountLabel.textContent = 'Opdracht ' + (currentStep + 1) + ' van ' + challenges.length;
         renderStepDots();
 
@@ -1207,7 +1389,12 @@
         challengeTitle.textContent = ch.title;
         challengeDesc.textContent = ch.desc;
 
-        codeInput.value = '';
+        if (preserveDraft) {
+          codeInput.value = draftCode;
+        } else {
+          draftCode = '';
+          codeInput.value = '';
+        }
         codeInput.placeholder = ch.placeholder;
         codeInput.setAttribute('inputmode', ch.inputMode);
         codeFeedback.classList.add('hidden');
@@ -1219,10 +1406,9 @@
        */
       function unlockLocation() {
         unlocked = true;
-        topStatusBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[3px] bg-[#EAF4EE] border border-[#1A6B3C] text-[#14532E] text-xs font-bold';
-        topStatusBadge.innerHTML = '<svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3.2 8.4l3.1 3.1 6.5-6.8"/></svg><span>Locatie ontgrendeld</span>';
-        overviewStepCounter.textContent = '5 van 5 klaar';
-
+        currentStep = challenges.length;
+        draftCode = '';
+        syncStatusHeader();
         showView('reveal');
 
         if (typeof confetti === 'function') {
@@ -1240,18 +1426,115 @@
       }
 
       /**
-       * Reset de voortgang om opnieuw te beginnen.
+       * Herstelt opgeslagen voortgang uit cookie / localStorage bij herladen of opnieuw openen.
        */
-      function resetAll() {
+      function restoreState() {
+        const saved = loadSavedProgress();
+        if (!saved) {
+          unlocked = false;
+          currentStep = 0;
+          draftCode = '';
+          syncStatusHeader();
+          showView('lookup', { skipSave: true, skipScroll: true });
+          return;
+        }
+
+        unlocked = Boolean(saved.unlocked);
+        const maxStep = unlocked ? challenges.length : Math.max(0, challenges.length - 1);
+        const parsedStep = parseInt(saved.step, 10);
+        currentStep = Number.isFinite(parsedStep) ? Math.min(Math.max(0, parsedStep), maxStep) : 0;
+        draftCode = typeof saved.draft === 'string' ? saved.draft : '';
+        syncStatusHeader();
+
+        let targetView = saved.view;
+        if (unlocked && targetView !== 'overview' && targetView !== 'lookup') {
+          targetView = 'reveal';
+        }
+        if (['lookup', 'overview', 'verify', 'reveal'].indexOf(targetView) === -1) {
+          targetView = unlocked ? 'reveal' : 'lookup';
+        }
+        if (targetView === 'reveal' && !unlocked) {
+          targetView = 'verify';
+        }
+        if (targetView === 'verify' && unlocked) {
+          targetView = 'reveal';
+        }
+
+        showView(targetView, { skipSave: true, skipScroll: true, preserveDraft: true });
+      }
+
+      /**
+       * Reset de voortgang pas na een dubbele bevestiging (voorkomt per ongeluk wissen).
+       */
+      function handleRestartClick() {
+        if (!restartConfirmPending) {
+          restartConfirmPending = true;
+          restartBtn.textContent = 'Weet je het zeker? Tik nogmaals om opnieuw te beginnen';
+          restartBtn.classList.add('border-[#9E1B1B]', 'text-[#9E1B1B]');
+          clearTimeout(restartConfirmTimer);
+          restartConfirmTimer = setTimeout(function () {
+            restartConfirmPending = false;
+            restartBtn.textContent = 'Opnieuw beginnen';
+            restartBtn.classList.remove('border-[#9E1B1B]', 'text-[#9E1B1B]');
+          }, 4000);
+          return;
+        }
+
+        clearTimeout(restartConfirmTimer);
+        restartConfirmPending = false;
+        restartBtn.textContent = 'Opnieuw beginnen';
+        restartBtn.classList.remove('border-[#9E1B1B]', 'text-[#9E1B1B]');
+
         unlocked = false;
         currentStep = 0;
         isAdvancing = false;
-        topStatusBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[3px] bg-[#FDF5E2] border border-[#B57E1A] text-[#7D5309] text-xs font-bold';
-        topStatusBadge.innerHTML = '<svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path stroke-linecap="round" d="M8 5v3.5M8 11h.01"/></svg><span>Actie nodig: Verificatie</span>';
-        overviewStepCounter.textContent = '4 van 5 klaar';
+        draftCode = '';
         trackingInput.value = '';
-        showView('lookup');
+        clearSavedProgress();
+        syncStatusHeader();
+        showView('lookup', { skipSave: true });
       }
+
+      // Lightbox voor de Afleverfoto
+      function openLightbox() {
+        if (deliveryPhotoImg.classList.contains('hidden')) return;
+        lightboxImg.src = deliveryPhotoImg.src;
+        lightboxCaption.textContent = photoCaptionDisplay.textContent;
+        photoLightbox.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        photoLightbox.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+
+      deliveryPhotoImg.addEventListener('click', openLightbox);
+      zoomPhotoBtn.addEventListener('click', openLightbox);
+      closeLightboxBtn.addEventListener('click', closeLightbox);
+      photoLightbox.addEventListener('click', function (e) {
+        if (e.target === photoLightbox) closeLightbox();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !photoLightbox.classList.contains('hidden')) {
+          closeLightbox();
+        }
+      });
+
+      // Foutmelding direct weghalen zodra gebruiker weer begint te typen
+      trackingInput.addEventListener('input', function () {
+        if (!lookupError.classList.contains('hidden')) {
+          lookupError.classList.add('hidden');
+        }
+      });
+
+      codeInput.addEventListener('input', function () {
+        draftCode = codeInput.value;
+        saveProgress();
+        if (!codeFeedback.classList.contains('hidden') && !isAdvancing) {
+          codeFeedback.classList.add('hidden');
+        }
+      });
 
       // Event: zendingnummer opzoeken
       lookupForm.addEventListener('submit', function (e) {
@@ -1260,10 +1543,12 @@
         if (cleaned === validTrackingClean) {
           lookupError.classList.add('hidden');
           loadingCodeLabel.textContent = texts.ZENDINGNUMMER;
-          showView('loading');
+          // Bewaar direct dat de bezorgcode geldig was
+          saveProgress({ view: unlocked ? 'reveal' : 'overview' });
+          showView('loading', { skipSave: true });
           setTimeout(function () {
             showView(unlocked ? 'reveal' : 'overview');
-          }, 900);
+          }, 850);
         } else {
           lookupError.classList.remove('hidden');
           lookupForm.classList.remove('animate-shake');
@@ -1277,14 +1562,14 @@
       });
 
       startVerifyBtn.addEventListener('click', function () {
-        showView(unlocked ? 'reveal' : 'verify');
+        showView(unlocked ? 'reveal' : 'verify', { preserveDraft: true });
       });
 
       backToOverviewBtn.addEventListener('click', function () {
         showView('overview');
       });
 
-      restartBtn.addEventListener('click', resetAll);
+      restartBtn.addEventListener('click', handleRestartClick);
 
       // Event: code controleren per opdracht
       codeForm.addEventListener('submit', function (e) {
@@ -1302,6 +1587,8 @@
 
         if (cleaned === ch.answer) {
           isAdvancing = true;
+          if (codeSubmitBtn) codeSubmitBtn.disabled = true;
+
           codeFeedback.className = 'mt-3 px-3.5 py-2.5 rounded-[5px] text-sm font-semibold text-center bg-[#EAF4EE] text-[#14532E] border border-[#A8D4BA] anim-pop';
           codeFeedback.textContent = currentStep + 1 < challenges.length
             ? 'Goed gedaan! Door naar de volgende opdracht...'
@@ -1310,14 +1597,22 @@
           const nextStep = currentStep + 1;
           verifyBarFill.style.width = ((nextStep / challenges.length) * 100) + '%';
 
+          // Sla de nieuwe voortgang DIRECT op (zelfs als de pagina tijdens de overgang wordt ververst!)
+          draftCode = '';
+          if (nextStep < challenges.length) {
+            saveProgress({ step: nextStep, view: 'verify', unlocked: false, draft: '' });
+          } else {
+            saveProgress({ step: challenges.length, view: 'reveal', unlocked: true, draft: '' });
+          }
+
           setTimeout(function () {
             if (nextStep < challenges.length) {
               currentStep = nextStep;
-              renderChallenge();
+              renderChallenge(false);
             } else {
               unlockLocation();
             }
-          }, 750);
+          }, 700);
         } else {
           challengeCard.classList.remove('animate-shake');
           void challengeCard.offsetWidth;
@@ -1328,10 +1623,22 @@
         }
       });
 
-      // Initialisatie
+      // Extra vangnet bij wegklikken of afsluiten van het tabblad
+      window.addEventListener('pagehide', function () {
+        if (currentView !== 'lookup' || currentStep > 0 || unlocked) {
+          saveProgress();
+        }
+      });
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'hidden' && (currentView !== 'lookup' || currentStep > 0 || unlocked)) {
+          saveProgress();
+        }
+      });
+
+      // Initialisatie: herstel direct eventuele opgeslagen voortgang en laad teksten.txt
       applyTexts();
+      restoreState();
       loadTekstenFile();
-      showView('lookup');
     })();
   </script>
 </body>
