@@ -1,0 +1,102 @@
+# ==============================================================================
+# PIETENPOST - TEKSTEN & INSTELLINGEN (FAMILIE DUIN)
+# ==============================================================================
+# Hier kun je eenvoudig alle teksten, codes, de verstopplek en de afleverfoto
+# van de website aanpassen.
+#
+# HOE WERKT HET?
+# - Regels die beginnen met # zijn uitleg en worden genegeerd.
+# - Pas alleen de tekst ACHTER de dubbele punt (:) aan.
+# - Laat de woorden VOOR de dubbele punt (zoals VERSTOPPLEK:) precies zo staan.
+# - Wil je de afleverfoto vervangen? Vervang het bestand 'foto.jpeg' in deze
+#   map door je eigen foto (of pas hieronder de bestandsnaam aan bij AFLEVERFOTO).
+# ==============================================================================
+
+
+# ------------------------------------------------------------------------------
+# 1. BELANGRIJKSTE INSTELLINGEN (VERSTOPPLEK, BERICHT & FOTO)
+# ------------------------------------------------------------------------------
+ONTVANGERS: Familie Duin
+VERSTOPPLEK: In de schuur, achter de fietsen
+BERICHT_PIET: "Ik heb hard aangeklopt, maar niemand deed open! De zakken cadeaus waren flink zwaar, dus ik heb ze goed verstopt voor Familie Duin. Veel plezier met uitpakken!" — Pakjespiet (#05)
+AFLEVERFOTO: foto.jpeg
+AFLEVERFOTO_BIJSCHRIFT: Afleverfoto gemaakt door Pakjespiet (#05) · 19:06
+
+
+# ------------------------------------------------------------------------------
+# 2. ZENDINGGEGEVENS & TRACK & TRACE CODE
+# ------------------------------------------------------------------------------
+ZENDINGNUMMER: PIET-8294
+AFZENDER: Sinterklaas (Spanje)
+BEZORGER: Pakjespiet (#05) & Ozosnel
+ZENDING: Zakken cadeaus
+HANDTEKENING_SUBTITEL: Pakjespiet (#05) & Ozosnel · 19:06
+
+
+# ------------------------------------------------------------------------------
+# 3. STARTSCHERM (ZENDINGNUMMER INVULLEN)
+# ------------------------------------------------------------------------------
+START_TITEL: Vul jullie zendingnummer in
+START_TEKST: Hebben jullie een 'Niet thuis'-briefje van Pakjespiet gevonden? Typ het nummer op het briefje hieronder in om te zien waar jullie pakket is.
+START_FOUTMELDING: Dit zendingnummer staat niet in het Grote Boek. Kijk goed op het briefje van Piet (begint met PIET-...).
+
+
+# ------------------------------------------------------------------------------
+# 4. OVERZICHTSSCHERM & BEZORGTIJDLIJN
+# ------------------------------------------------------------------------------
+OVERZICHT_TITEL: We hebben jullie gemist
+OVERZICHT_TEKST: Pakjespiet heeft aangeklopt, maar niemand deed open. Jullie zakken cadeaus liggen veilig verstopt.
+
+STAP_1_TIJD: 14:10
+STAP_1_TITEL: Aangemeld door Sinterklaas
+STAP_1_TEKST: Gecontroleerd in het Grote Boek en klaargezet voor bezorging.
+
+STAP_2_TIJD: 18:45
+STAP_2_TITEL: Onderweg over de daken
+STAP_2_TEKST: Pakjespiet is met Ozosnel naar jullie straat vertrokken.
+
+STAP_3_TIJD: 19:04
+STAP_3_TITEL: Aangeklopt — niemand thuis
+STAP_3_TEKST: Hard op de deur geklopt, maar niemand deed open. Briefje achtergelaten.
+
+STAP_4_TIJD: 19:06
+STAP_4_TITEL: Cadeaus veilig verstopt
+STAP_4_TEKST: De zakken cadeaus staan droog en veilig, achter een digitaal slot.
+
+STAP_5_TITEL: Verificatie doen om de plek te zien
+STAP_5_TEKST: Doe 6 korte opdrachten en vul de codes in. Zo weet Piet zeker dat jullie het zijn, en gaat de bezorglocatie direct open.
+
+
+# ------------------------------------------------------------------------------
+# 5. DE 6 OPDRACHTEN & ANTWOORDCODES
+# ------------------------------------------------------------------------------
+OPDRACHT_1_TITEL: De verscheurde pakbon
+OPDRACHT_1_TEKST: Leg de 16 stukjes van de verscheurde pakbon weer goed aan elkaar. Welke geheime code van 4 cijfers komt er in het midden tevoorschijn? Typ dat getal hieronder in.
+OPDRACHT_1_CODE: 5120
+
+OPDRACHT_2_TITEL: Het gekke briefje van Piet
+OPDRACHT_2_TEKST: Pakjespiet heeft het geheime briefje op bewijsstuk #2 wel heel gek opgeschreven! Hoe kunnen jullie dit bericht toch gewoon lezen? Typ het geheime codewoord hieronder in.
+OPDRACHT_2_CODE: SINT
+
+OPDRACHT_3_TITEL: Zoek de 6 pepernoten-letters
+OPDRACHT_3_TEKST: In de kamer liggen 6 losse pepernoten-letters verstopt. Zoek ze alle 6 en leg ze op de goede volgorde. Welk woord krijg je?
+OPDRACHT_3_CODE: PAKJES
+
+OPDRACHT_4_TITEL: De geheime licht-envelop
+OPDRACHT_4_TEKST: Maak de envelop niet open! Schijn er met het lampje van een telefoon doorheen. Welke 4 cijfers zie je?
+OPDRACHT_4_CODE: 2026
+
+OPDRACHT_5_TITEL: Pepernoten tellen
+OPDRACHT_5_TEKST: Zoek het zakje met pepernoten en tel ze heel precies (nog niet opeten!). Hoeveel pepernoten zitten er in het zakje?
+OPDRACHT_5_CODE: 27
+
+OPDRACHT_6_TITEL: De laatste puzzel: de papieren rebus
+OPDRACHT_6_TEKST: Pak het grote rebus-blad van Pakjespiet met de 5 plaatjes. Los alle 5 stukjes op met potlood. Welk lang Sinterklaaswoord komt eruit? Typ dat woord hieronder in.
+OPDRACHT_6_CODE: SINTERKLAASPIET
+
+
+# ------------------------------------------------------------------------------
+# 6. ONTGRENDELD AFLEVERBEWIJS
+# ------------------------------------------------------------------------------
+ONTGRENDELD_TITEL: Verificatie geslaagd!
+ONTGRENDELD_SUBTITEL: Alle 6 codes kloppen, Familie Duin! Hier liggen jullie cadeaus:
